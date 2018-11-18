@@ -1,7 +1,6 @@
 package game;
 
 import board.*;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import pieces.Piece;
 import utils.Enums;
 import utils.Vector;
@@ -112,6 +111,10 @@ public class Game {
   }
 
   private void printLost(List<LostPiece> lost) {
+    if (lost.isEmpty()) {
+      System.out.println("none");
+      return;
+    }
     for (LostPiece piece: lost)
       System.out.println(piece);
   }

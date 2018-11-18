@@ -43,6 +43,13 @@ public class Board {
 
     board[7][2] = new Bishop(ChessPieceColors.WHITE, new Vector(7, 2));
     board[7][5] = new Bishop(ChessPieceColors.WHITE, new Vector(7, 5));
+
+    // set up kings and queens
+    board[0][3] = new King(ChessPieceColors.BLACK,  new Vector(0, 3));
+    board[0][4] = new Queen(ChessPieceColors.BLACK, new Vector(0, 4));
+
+    board[7][3] = new King(ChessPieceColors.WHITE,  new Vector(7, 3));
+    board[7][4] = new Queen(ChessPieceColors.WHITE, new Vector(7, 4));
   }
 
   public void printBoard() {

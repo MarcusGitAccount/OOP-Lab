@@ -1,7 +1,6 @@
 package pieces;
 import utils.Enums.*;
 import utils.Vector;
-import utils.Enums.ChessPieceColors;
 
 import java.util.ArrayList;
 import java.util.List;
