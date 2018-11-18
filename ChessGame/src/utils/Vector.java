@@ -6,7 +6,7 @@ public class Vector {
 
   public Vector(int i, int j) {
     this.i = i;
-    this.j =  j;
+    this.j = j;
   }
 
   public Vector() {
@@ -43,6 +43,22 @@ public class Vector {
 
   public void setJ(int j) {
     this.j = j;
+  }
+
+  public boolean equals(Vector v) {
+    return (i == v.i && j == v.j);
+  }
+
+  // Returns the vector with i, j from set {-1, 1, 0}
+  public Vector unit() {
+    int _i = i;
+    int _j = j;
+
+    if (i != 0)
+      _i /= Math.abs(i);
+    if (j != 0)
+      _j /= Math.abs(j);
+    return new Vector(_i, _j);
   }
 
   public String toString() {

@@ -3,13 +3,18 @@ import utils.Enums.*;
 import utils.Vector;
 import utils.Enums.ChessPieceColors;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public abstract class Piece {
   private ChessPieceColors color;
   private Vector position;
+  private int movesPerformed;
 
   public Piece(ChessPieceColors color, Vector position) {
     this.color = color;
     this.position = position;
+    this.movesPerformed = 0;
   }
 
   public Piece() {
@@ -25,7 +30,20 @@ public abstract class Piece {
   // @returns an array of positions that will be passed in the process of moving the piece on the board
   // and need to be empty in order for the move to be valid
   // empty array => no additional checks are required
-  public abstract Vector[] computeMove(Vector destination);
+  public List<Vector> computeMove(Vector destination) {
+    // retrieve the extra steps the tower make to reach its destination
+    Vector diff = destination.add(this.getPosition().multiply(-1));
+    Vector increment = diff.unit();
+    Vector start = this.getPosition().add(increment);
+    List<Vector> moves = new ArrayList<Vector>();
+
+    while (!start.equals(destination)) {
+      moves.add(start);
+      start = start.add(increment);
+    }
+
+    return moves;
+  }
 
   // @returns the unicode representation of the piece
   public abstract String getCode();
@@ -43,5 +61,22 @@ public abstract class Piece {
 
   public ChessPieceColors getColor() {
     return color;
+  }
+
+  public void setColor(ChessPieceColors color) {
+    this.color = color;
+  }
+
+  public int getMovesPerformed() {
+    return movesPerformed;
+  }
+
+  public void incrementMoves() {
+    this.movesPerformed++;
+  }
+
+  @Override
+  public String toString() {
+    return position + " with " + movesPerformed + " moves performed.";
   }
 }

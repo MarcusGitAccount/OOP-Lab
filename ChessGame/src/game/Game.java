@@ -1,18 +1,29 @@
 package game;
-import board.Board;
+
+import board.*;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import pieces.Piece;
 import utils.Enums;
 import utils.Vector;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Game {
   private Board board;
-  private int turn = 0;
+  private int turn;
+  private int iteration ;
+  private List<LostPiece> lostByWhite;
+  private List<LostPiece> lostByBlack;
 
   public Game() {
+    turn = iteration = 0;
     board = new Board();
+    lostByBlack = new ArrayList<LostPiece>();
+    lostByWhite = new ArrayList<LostPiece>();
   }
 
-  private boolean isValidPostion(Vector position) {
+  private boolean isValidPosition(Vector position) {
     int i = position.getI();
     int j = position.getJ();
 
@@ -24,7 +35,9 @@ public class Game {
   }
 
   public boolean move(Vector source, Vector destination) {
-    if (!isValidPostion(source) || !isValidPostion(destination))
+    if (!isValidPosition(source) || !isValidPosition(destination))
+      return false;
+    if (source.equals(destination))
       return false;
 
     int _turn = turn;
@@ -43,18 +56,32 @@ public class Game {
     if (start.getColor() == Enums.ChessPieceColors.BLACK && _turn == 0)
       return false;
 
+    // the king can not be run over
+    if (end != null && end.getType() == Enums.ChessPieceType.KING)
+      return false;
     if (!start.checkMove(destination, end))
       return false;
 
-    Vector[] additionalSteps= start.computeMove(destination);
+    List<Vector> additionalSteps= start.computeMove(destination);
 
     for (Vector position: additionalSteps) {
       if (board.retrievePiece(position) != null)
         return false;
     }
 
+    if (end != null) {
+      LostPiece lost = new LostPiece(iteration, end);
+
+      if (_turn == 0)
+        lostByBlack.add(lost);
+      else
+        lostByWhite.add(lost);
+    }
+
+    iteration++;
     board.setPiece(destination, start);
     board.setPiece(source, null);
+    start.incrementMoves();
     return true;
   }
 
@@ -62,8 +89,31 @@ public class Game {
     return this.move(new Vector(x1, y1), new Vector(x2, y2));
   }
 
+  public boolean move() {
+    // the player has decided to do nothing
+    turn ^= 1;
+    return true;
+  }
+
   public void printBoard() {
+    System.out.println("Game iteration: " + iteration);
+    System.out.println("Current turn: " + getTurn());
     board.printBoard();
+    System.out.println("Lost by white: ");
+    printLost(lostByWhite);
+    System.out.println("Lost by black: ");
+    printLost(lostByBlack);
+  }
+
+  public Enums.ChessPieceColors getTurn() {
+    if (turn == 0)
+      return Enums.ChessPieceColors.WHITE;
+    return Enums.ChessPieceColors.BLACK;
+  }
+
+  private void printLost(List<LostPiece> lost) {
+    for (LostPiece piece: lost)
+      System.out.println(piece);
   }
 
   public static void main(String[] args) {
@@ -74,6 +124,22 @@ public class Game {
     game.move(5, 1, 4, 1);
     game.move(2, 0, 3, 0);
     game.move(4, 1, 3, 0);
+    game.move();
+    game.move(3, 0, 2, 0);
+    game.move(0, 1, 2, 0);
+    game.move(7, 1, 5, 2);
+    game.move(2, 0, 3, 2);
+    game.move();
+    game.move(0, 0, 6, 0);
+    game.move(7, 0, 6, 0);
+    game.move();
+    game.move(6, 0, 0, 0);
+    game.move(0, 7, 7, 7);
+    game.move(7, 2, 5, 0);
+    game.move(0, 2, 1, 1);
+    game.move(0, 0, 0, 2);
+    game.move(1, 7, 2, 7);
+    game.move(5, 0, 3, 2);
 
     game.printBoard();
   }

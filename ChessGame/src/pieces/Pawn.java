@@ -3,6 +3,9 @@ package pieces;
 import utils.Enums.*;
 import utils.Vector;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Pawn extends Piece {
   public Pawn(ChessPieceColors color, Vector position) {
     super(color, position);
@@ -38,9 +41,9 @@ public class Pawn extends Piece {
   }
 
   @Override
-  public Vector[] computeMove(Vector destination) {
+  public List<Vector> computeMove(Vector destination) {
     // fot a pawn there are no required extra steps when making a move
-    return new Vector[0];
+    return new ArrayList<Vector>();
   }
 
   @Override
@@ -57,7 +60,8 @@ public class Pawn extends Piece {
     return ChessPieceType.PAWN;
   }
 
+  @Override
   public String toString() {
-    return "@Pawn at " + this.getPosition();
+    return "@Pawn at " + super.toString();
   }
 }

@@ -10,7 +10,7 @@ public class Enums {
     PAWN,
     TOWER,
     KNIGHT,
-    ROOK,
+    BISHOP,
     QUEEN,
     KING
   }
