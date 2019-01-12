@@ -2,7 +2,7 @@ package game;
 
 import board.*;
 import pieces.Piece;
-import utils.Enums;
+import utils.Enums.*;
 import utils.Vector;
 
 import java.util.ArrayList;
@@ -39,6 +39,7 @@ public class Game {
     if (source.equals(destination))
       return false;
 
+    ChessPieceColors currentPlayer = getTurn();
     int _turn = turn;
     turn ^= 1;
 
@@ -47,16 +48,18 @@ public class Game {
 
     if (start == null)
       return false;
+    if (start.getColor() != currentPlayer) // now turn is reversed
+      return false;
     if (end != null && start.getColor() == end.getColor())
       return false;
 
-    if (start.getColor() == Enums.ChessPieceColors.WHITE && _turn == 1)
+    if (start.getColor() == ChessPieceColors.WHITE && _turn == 1)
       return false;
-    if (start.getColor() == Enums.ChessPieceColors.BLACK && _turn == 0)
+    if (start.getColor() == ChessPieceColors.BLACK && _turn == 0)
       return false;
 
     // the king can not be run over
-    if (end != null && end.getType() == Enums.ChessPieceType.KING)
+    if (end != null && end.getType() == ChessPieceType.KING)
       return false;
     if (!start.checkMove(destination, end))
       return false;
@@ -81,6 +84,9 @@ public class Game {
     board.setPiece(destination, start);
     board.setPiece(source, null);
     start.incrementMoves();
+
+    this.printBoard();
+
     return true;
   }
 
@@ -97,17 +103,21 @@ public class Game {
   public void printBoard() {
     System.out.println("Game iteration: " + iteration);
     System.out.println("Current turn: " + getTurn());
+    System.out.println();
+
     board.printBoard();
+
+    System.out.println();
     System.out.println("Lost by white: ");
     printLost(lostByWhite);
     System.out.println("Lost by black: ");
     printLost(lostByBlack);
   }
 
-  public Enums.ChessPieceColors getTurn() {
+  public ChessPieceColors getTurn() {
     if (turn == 0)
-      return Enums.ChessPieceColors.WHITE;
-    return Enums.ChessPieceColors.BLACK;
+      return ChessPieceColors.WHITE;
+    return ChessPieceColors.BLACK;
   }
 
   private void printLost(List<LostPiece> lost) {
@@ -139,11 +149,8 @@ public class Game {
     game.move(6, 0, 0, 0);
     game.move(0, 7, 7, 7);
     game.move(7, 2, 5, 0);
-    game.move(0, 2, 1, 1);
-    game.move(0, 0, 0, 2);
-    game.move(1, 7, 2, 7);
-    game.move(5, 0, 3, 2);
+    game.move(1, 3, 2, 3);
 
-    game.printBoard();
+    // game.printBoard();
   }
 }
